@@ -8,7 +8,7 @@
 
     {%- assign blog = section.settings.blog -%}
 
-    <div class="blog__grid grid grid--1-col grid--{{ section.settings.columns_desktop }}-col-desktop">
+    <div class="blog__grid grid grid--1-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop">
       {%- if blog != blank and blog.articles_count > 0 -%}
         {%- for article in blog.articles limit: section.settings.post_limit -%}
           <div class="grid__item" {{ block.shopify_attributes }}>

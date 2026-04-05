@@ -6,7 +6,7 @@
       </div>
     {%- endif -%}
 
-    <div class="collection-list__grid grid grid--1-col grid--{{ section.settings.columns_desktop }}-col-desktop">
+    <div class="collection-list__grid grid grid--1-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop">
       {%- for block in section.blocks -%}
         <div class="grid__item collection-list__item" {{ block.shopify_attributes }}>
            {%- assign collection = block.settings.collection -%}

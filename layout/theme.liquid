@@ -72,7 +72,7 @@
         --font-heading-style: {{ settings.type_header_font.style }};
         --font-heading-weight: {{ settings.type_header_font.weight }};
 
-        --page-width: {{ settings.page_width | divided_by: 10 }}rem;
+        --page-width: {{ settings.page_width }}px;
         --page-width-margin: {% if settings.page_width == '1600' %}2{% else %}0{% endif %}rem;
 
         --buttons-radius: {{ settings.buttons_radius }}px;
@@ -112,14 +112,12 @@
 
       html {
         box-sizing: border-box;
-        font-size: calc(var(--font-body-scale) * 62.5%);
+        font-size: calc({{ settings.font_body_scale | default: 100 }} / 100 * 62.5%);
         height: 100%;
       }
 
       body {
-        display: grid;
-        grid-template-rows: auto auto 1fr auto;
-        grid-template-columns: 100%;
+        display: block;
         min-height: 100%;
         margin: 0;
         font-size: 1.5rem;
