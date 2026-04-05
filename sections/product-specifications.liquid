@@ -1,0 +1,157 @@
+<div class="product-specs section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="section-heading text-center">
+      <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+    </div>
+
+    <div class="product-specs__grid grid grid--1-col grid--{{ section.settings.columns_desktop }}-col-desktop">
+      {%- for block in section.blocks -%}
+        <div class="grid__item product-specs__item" {{ block.shopify_attributes }}>
+          <div class="product-specs__content">
+            <span class="product-specs__label">{{ block.settings.label | escape }}</span>
+            <div class="product-specs__value rte">{{ block.settings.value }}</div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .product-specs {
+    background-color: var(--color-background);
+  }
+  .product-specs__grid {
+    border-top: 1px solid rgba(var(--color-base-text), 0.1);
+    margin-top: 4rem;
+  }
+  .product-specs__item {
+    border-bottom: 1px solid rgba(var(--color-base-text), 0.1);
+    padding: 2.5rem 0;
+  }
+  .product-specs__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  .product-specs__label {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    letter-spacing: 0.1rem;
+    white-space: nowrap;
+    color: rgba(var(--color-base-text), 0.6);
+  }
+  .product-specs__value {
+    text-align: right;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-specs__content { flex-direction: column; gap: 0.5rem; text-align: left; }
+    .product-specs__value { text-align: left; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Product specifications",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Specifications",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+       "type": "range",
+       "id": "columns_desktop",
+       "min": 1,
+       "max": 3,
+       "step": 1,
+       "default": 2,
+       "label": "Columns on desktop"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Specification",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "default": "Material",
+          "label": "Label"
+        },
+        {
+          "type": "richtext",
+          "id": "value",
+          "default": "<p>Premium grade alloy</p>",
+          "label": "Value"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product specifications",
+      "blocks": [
+        { "type": "spec", "settings": { "label": "Weight", "value": "<p>250g</p>" } },
+        { "type": "spec", "settings": { "label": "Dimensions", "value": "<p>10cm x 5cm</p>" } },
+        { "type": "spec", "settings": { "label": "Battery", "value": "<p>24h use</p>" } },
+        { "type": "spec", "settings": { "label": "Connectivity", "value": "<p>Bluetooth 5.0</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

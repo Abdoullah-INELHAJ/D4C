@@ -1,0 +1,242 @@
+<div class="promo-grid section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-heading text-center">
+         <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="promo-grid__wrapper grid grid--1-col grid--{{ section.settings.columns_desktop }}-col-desktop">
+      {%- for block in section.blocks -%}
+        <div class="grid__item promo-grid__item promo-grid__item--{{ block.settings.width }}" {{ block.shopify_attributes }}>
+           <a href="{{ block.settings.link }}" class="promo-card">
+              <div class="promo-card__media media media--{% if block.settings.aspect == 'square' %}square{% else %}adapt{% endif %}">
+                {%- if block.settings.image != blank -%}
+                   {{ block.settings.image | image_url: width: 1500 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+                   {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <div class="promo-card__content promo-card__content--{{ block.settings.content_position }}">
+                <div class="promo-card__box text-{{ block.settings.content_alignment }}">
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="h2">{{ block.settings.title | escape }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.subtext != blank -%}
+                    <p class="h4">{{ block.settings.subtext | escape }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.button_label != blank -%}
+                    <span class="button button--secondary">{{ block.settings.button_label | escape }}</span>
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="promo-card__overlay" style="opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+           </a>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .promo-grid__wrapper {
+    gap: 2rem;
+  }
+  .promo-card {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    height: 100%;
+  }
+  .promo-card__media img {
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .promo-card:hover .promo-card__media img {
+    transform: scale(1.05);
+  }
+  .promo-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+  .promo-card__content {
+    position: relative;
+    z-index: 2;
+    padding: 3rem;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    color: white;
+  }
+  .promo-card__content--top { align-items: flex-start; }
+  .promo-card__content--middle { align-items: center; }
+  .promo-card__content--bottom { align-items: flex-end; }
+
+  .promo-card__box h3 { margin: 0 0 1rem; font-weight: 800; }
+  .promo-card__box p { margin: 0 0 2rem; opacity: 0.9; }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Promo grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+       "type": "range",
+       "id": "columns_desktop",
+       "min": 1,
+       "max": 3,
+       "step": 1,
+       "default": 2,
+       "label": "Columns on desktop"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promo",
+      "name": "Promo banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "aspect",
+          "options": [
+            { "value": "square", "label": "Square" },
+            { "value": "adapt", "label": "Adapt to image" }
+          ],
+          "default": "adapt",
+          "label": "Aspect ratio"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "min": 0,
+          "max": 90,
+          "step": 10,
+          "unit": "%",
+          "label": "Overlay opacity",
+          "default": 20
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Promo Title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subtext",
+          "default": "Brief description here",
+          "label": "Subtext"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Discover",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "middle", "label": "Middle" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "bottom",
+          "label": "Content position"
+        },
+        {
+          "type": "select",
+          "id": "content_alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" }
+          ],
+          "default": "left",
+          "label": "Alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo grid",
+      "blocks": [
+        { "type": "promo", "settings": { "title": "Collection One" } },
+        { "type": "promo", "settings": { "title": "Collection Two" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

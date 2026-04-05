@@ -1,0 +1,18 @@
+{%- if settings.cart_upsell_product != blank -%}
+  <div class="cart-drawer__upsells">
+    <p class="h4">{{ settings.cart_upsell_heading | default: 'Recommended for you' }}</p>
+    <div class="upsell-item">
+      <div class="upsell-item__image">
+        {{ settings.cart_upsell_product.featured_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+      </div>
+      <div class="upsell-item__info">
+        <p class="h4">{{ settings.cart_upsell_product.title }}</p>
+        <p>{{ settings.cart_upsell_product.price | money }}</p>
+        <button class="button button--secondary button--small" 
+                onclick="CartAPI.addToCart({{ settings.cart_upsell_product.selected_or_first_available_variant.id }})">
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

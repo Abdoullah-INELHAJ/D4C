@@ -1,0 +1,178 @@
+<div class="instagram-stories section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-heading text-center">
+        <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="stories__inner swiper" data-swiper-stories>
+      <div class="swiper-wrapper">
+        {%- for block in section.blocks -%}
+          <div class="swiper-slide story-item" {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link }}" class="story-item__link">
+              <div class="story-item__image-wrapper {% if block.settings.active %}story-item__image-wrapper--active{% endif %}">
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'story-item__image' }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <span class="story-item__label h4">{{ block.settings.label | escape }}</span>
+            </a>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .instagram-stories {
+    overflow: hidden;
+  }
+  .stories__inner {
+    padding: 2rem 0;
+  }
+  .story-item {
+    width: auto !important;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+  .story-item__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .story-item__image-wrapper {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .story-item:hover .story-item__image-wrapper {
+    transform: scale(1.1);
+  }
+  .story-item__image-wrapper--active {
+     background: #4ade80;
+  }
+  .story-item__image {
+     width: 100%;
+     height: 100%;
+     border-radius: 50%;
+     object-fit: cover;
+     border: 3px solid white;
+  }
+  .story-item__label {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Instagram stories",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Follow us",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h2",
+       "label": "Heading size"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Story image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "default": "Brand",
+          "label": "Label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "active",
+          "default": false,
+          "label": "Highlight as active"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram stories",
+      "blocks": [
+        { "type": "story", "settings": { "label": "Spring" } },
+        { "type": "story", "settings": { "label": "Summer" } },
+        { "type": "story", "settings": { "label": "New In" } },
+        { "type": "story", "settings": { "label": "Sale" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

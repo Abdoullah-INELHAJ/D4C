@@ -1,0 +1,207 @@
+<div class="media-with-tabs section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="media-with-tabs__grid grid grid--1-col grid--2-col-tablet">
+      <div class="grid__item media-with-tabs__media">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'media-with-tabs__img' }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      <div class="grid__item media-with-tabs__tabs">
+        <div class="tabs-container">
+          <div class="tabs-header">
+            {%- for block in section.blocks -%}
+              <button class="tab-link {% if forloop.first %}tab-link--active{% endif %}" data-tab="tab-{{ block.id }}">
+                {{ block.settings.title | escape }}
+              </button>
+            {%- endfor -%}
+          </div>
+          <div class="tabs-content">
+            {%- for block in section.blocks -%}
+              <div class="tab-pane {% if forloop.first %}tab-pane--active{% endif %}" id="tab-{{ block.id }}" {{ block.shopify_attributes }}>
+                <h3 class="h2">{{ block.settings.heading | escape }}</h3>
+                <div class="rte">{{ block.settings.text }}</div>
+                {%- if block.settings.link_label != blank -%}
+                  <a href="{{ block.settings.link }}" class="button">{{ block.settings.link_label | escape }}</a>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .media-with-tabs__media img {
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  .tabs-header {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    border-bottom: 2px solid rgba(var(--color-base-text), 0.1);
+    scrollbar-width: none;
+  }
+  .tab-link {
+    background: none;
+    border: none;
+    padding: 1.5rem 2.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: rgba(var(--color-base-text), 0.5);
+    white-space: nowrap;
+    position: relative;
+  }
+  .tab-link--active {
+    color: rgb(var(--color-base-text));
+  }
+  .tab-link--active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgb(var(--color-base-accent-1));
+  }
+  .tab-pane {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .tab-pane--active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+<script>
+  function initTabs() {
+    const containers = document.querySelectorAll('.tabs-container');
+    containers.forEach(container => {
+      const links = container.querySelectorAll('.tab-link');
+      const panes = container.querySelectorAll('.tab-pane');
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          const tabId = link.dataset.tab;
+          
+          links.forEach(l => l.classList.remove('tab-link--active'));
+          panes.forEach(p => p.classList.remove('tab-pane--active'));
+          
+          link.classList.add('tab-link--active');
+          document.getElementById(tabId).classList.add('tab-pane--active');
+        });
+      });
+    });
+  }
+  document.addEventListener('DOMContentLoaded', initTabs);
+  if (Shopify.designMode) {
+    document.addEventListener('shopify:section:load', initTabs);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Media with tabs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Tab Title",
+          "label": "Tab Name"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Key Feature",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Explain the details of this feature to your customers.</p>",
+          "label": "Text"
+        },
+        {
+           "type": "text",
+           "id": "link_label",
+           "label": "Button label"
+        },
+        {
+           "type": "url",
+           "id": "link",
+           "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media with tabs",
+      "blocks": [
+        { "type": "tab", "settings": { "title": "Design" } },
+        { "type": "tab", "settings": { "title": "Performance" } },
+        { "type": "tab", "settings": { "title": "Durability" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

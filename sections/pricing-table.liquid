@@ -1,0 +1,245 @@
+<div class="pricing-table section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-heading text-center">
+        <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.description != blank -%}
+          <div class="section-description rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="pricing__grid grid grid--1-col grid--3-col-tablet">
+      {%- for block in section.blocks -%}
+        <div class="grid__item" {{ block.shopify_attributes }}>
+          <div class="pricing-card {% if block.settings.featured %}pricing-card--featured{% endif %}">
+            <div class="pricing-card__header">
+              <h3 class="h2">{{ block.settings.plan_name | escape }}</h3>
+              <div class="pricing-card__price">
+                <span class="currency">{{ cart.currency.symbol }}</span>
+                <span class="amount">{{ block.settings.price }}</span>
+                <span class="period">/ {{ block.settings.period | escape }}</span>
+              </div>
+            </div>
+            <div class="pricing-card__content">
+              <div class="pricing-card__features rte">
+                {{ block.settings.features }}
+              </div>
+            </div>
+            <div class="pricing-card__footer">
+              <a href="{{ block.settings.button_link }}" class="button button--full-width {% if block.settings.featured %}button--primary{% else %}button--secondary{% endif %}">
+                {{ block.settings.button_label | escape }}
+              </a>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .pricing-card {
+    background: white;
+    padding: 4rem;
+    border-radius: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid rgba(var(--color-base-text), 0.1);
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  .pricing-card:hover {
+    transform: translateY(-1rem);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  }
+  .pricing-card--featured {
+    border: 2px solid rgb(var(--color-base-accent-1));
+    z-index: 1;
+  }
+  .pricing-card--featured::after {
+    content: 'Most Popular';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(var(--color-base-accent-1));
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .pricing-card__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .pricing-card__price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .pricing-card__price .amount {
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: -0.1rem;
+  }
+  .pricing-card__price .currency {
+    font-size: 2rem;
+    font-weight: 700;
+    opacity: 0.6;
+  }
+  .pricing-card__features {
+    flex: 1;
+    margin-bottom: 3rem;
+    font-size: 1.6rem;
+  }
+  .pricing-card__features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .pricing-card__features li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .pricing-card__features li::before {
+    content: '✓';
+    color: rgb(var(--color-base-accent-1));
+    font-weight: 900;
+  }
+  .section-heading { margin-bottom: 4rem; }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Pricing table",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Choose your plan",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+       "type": "richtext",
+       "id": "description",
+       "label": "Description"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "default": false,
+          "label": "Highlight this plan"
+        },
+        {
+          "type": "text",
+          "id": "plan_name",
+          "default": "Starter",
+          "label": "Plan name"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "default": "29",
+          "label": "Price"
+        },
+        {
+          "type": "text",
+          "id": "period",
+          "default": "monthly",
+          "label": "Billing period"
+        },
+        {
+          "type": "richtext",
+          "id": "features",
+          "default": "<ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>",
+          "label": "Features list"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Get Started",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pricing table",
+      "blocks": [
+        { "type": "plan", "settings": { "plan_name": "Starter", "price": "19" } },
+        { "type": "plan", "settings": { "plan_name": "Pro", "price": "49", "featured": true } },
+        { "type": "plan", "settings": { "plan_name": "Enterprise", "price": "99" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,112 @@
+{
+  "sections": {
+    "banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Experience Premium Performance"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Discover the theme built for conversion and speed.</p>"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop Collection",
+            "button_link_1": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "buttons"
+      ],
+      "settings": {
+        "image": "",
+        "image_2": "",
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
+        "desktop_content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "image_overlay_opacity": 30,
+        "banner_height": "medium",
+        "desktop_content_width": "medium",
+        "show_text_below": false,
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_box_mobile": true
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Crafted for Excellence",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>D4C Premium is inspired by the best themes in the industry, focused on delivering a high-performance experience without any external apps.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Featured Products",
+        "collection": "all",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": false,
+        "columns_mobile": "1",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "scrolling_text": {
+       "type": "scrolling-text",
+       "blocks": {
+          "item_1": { "type": "text", "settings": { "text": "Free Shipping Globally" } },
+          "item_2": { "type": "text", "settings": { "text": "Premium Quality" } },
+          "item_3": { "type": "text", "settings": { "text": "Fast Delivery" } }
+       },
+       "block_order": ["item_1", "item_2", "item_3"],
+       "settings": { "speed": 15, "direction": "left", "padding_top": 20, "padding_bottom": 20 }
+    }
+  },
+  "order": [
+    "banner",
+    "scrolling_text",
+    "rich_text",
+    "featured_collection"
+  ]
+}

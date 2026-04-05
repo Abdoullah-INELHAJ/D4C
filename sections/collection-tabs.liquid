@@ -1,0 +1,215 @@
+<div class="collection-tabs section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-heading text-center">
+        <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="collection-tabs__container" data-collection-tabs>
+      <div class="collection-tabs__header center">
+        {%- for block in section.blocks -%}
+           {%- assign collection = block.settings.collection -%}
+           <button class="tab-link h4 {% if forloop.first %}tab-link--active{% endif %}" data-tab-id="tab-{{ section.id }}-{{ forloop.index }}">
+              {{ block.settings.title | default: collection.title | default: 'Collection' }}
+           </button>
+        {%- endfor -%}
+      </div>
+
+      <div class="collection-tabs__content">
+        {%- for block in section.blocks -%}
+          {%- assign collection = block.settings.collection -%}
+          <div class="tab-pane {% if forloop.first %}tab-pane--active{% endif %}" id="tab-{{ section.id }}-{{ forloop.index }}" {{ block.shopify_attributes }}>
+             <div class="grid grid--2-col grid--4-col-desktop">
+                {%- if collection != blank -%}
+                   {%- for product in collection.products limit: section.settings.products_to_show -%}
+                      <div class="grid__item">
+                         {% render 'product-card', product: product %}
+                      </div>
+                   {%- endfor -%}
+                {%- else -%}
+                   {%- for i in (1..section.settings.products_to_show) -%}
+                      <div class="grid__item">
+                         {% render 'product-card-placeholder' %}
+                      </div>
+                   {%- endfor -%}
+                {%- endif -%}
+             </div>
+             {%- if collection != blank and collection.all_products_count > section.settings.products_to_show -%}
+                <div class="center mt-4">
+                   <a href="{{ collection.url }}" class="button">View All</a>
+                </div>
+             {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .collection-tabs__header {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid rgba(var(--color-base-text), 0.1);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-link {
+    background: none;
+    border: none;
+    padding: 1.5rem 3rem;
+    cursor: pointer;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15rem;
+    color: rgba(var(--color-base-text), 0.4);
+    position: relative;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+  .tab-link--active {
+    color: rgb(var(--color-base-text));
+  }
+  .tab-link--active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgb(var(--color-base-accent-1));
+  }
+  .tab-pane {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .tab-pane--active {
+    display: block;
+  }
+  .mt-4 { margin-top: 4rem; }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+<script>
+  function initCollectionTabs() {
+    const containers = document.querySelectorAll('[data-collection-tabs]');
+    containers.forEach(container => {
+      const links = container.querySelectorAll('.tab-link');
+      const panes = container.querySelectorAll('.tab-pane');
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          const tabId = link.dataset.tabId;
+          links.forEach(l => l.classList.remove('tab-link--active'));
+          panes.forEach(p => p.classList.remove('tab-pane--active'));
+          link.classList.add('tab-link--active');
+          container.querySelector(`#${tabId}`).classList.add('tab-pane--active');
+        });
+      });
+    });
+  }
+  document.addEventListener('DOMContentLoaded', initCollectionTabs);
+  if (Shopify.designMode) {
+    document.addEventListener('shopify:section:load', initCollectionTabs);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection tabs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Featured Collections",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show per collection"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Collection Tab",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Label (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection tabs",
+      "blocks": [
+        { "type": "tab" },
+        { "type": "tab" },
+        { "type": "tab" }
+      ]
+    }
+  ]
+}
+{% endschema %}

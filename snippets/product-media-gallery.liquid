@@ -1,0 +1,51 @@
+<div class="product__media-list-wrapper">
+  <ul class="product__media-list grid grid--1-col list-unstyled" role="list">
+    {%- for media in product.media -%}
+      <li class="product__media-item grid__item" data-media-id="{{ media.id }}">
+        {%- case media.media_type -%}
+          {%- when 'image' -%}
+            <div class="product__media media media--transparent" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+              {{ media.preview_image | image_url: width: 1100 | image_tag:
+                loading: 'lazy',
+                widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+                alt: media.alt | escape
+              }}
+            </div>
+          {%- when 'video' -%}
+            {{ media | video_tag: controls: true, autoplay: false, loop: true, class: 'product__video' }}
+          {%- when 'external_video' -%}
+            {{ media | external_video_tag: class: 'product__video-external' }}
+          {%- when 'model' -%}
+            {{ media | model_viewer_tag: image_size: '1024x', reveal: 'interaction', toggleable: true, data-model-id: media.id }}
+        {%- endcase -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+<style>
+  .product__media-list {
+    margin: 0;
+    padding: 0;
+  }
+  .product__media-item {
+    margin-bottom: 2rem;
+  }
+  .media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+  .media > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .product__video, .product__video-external {
+    width: 100%;
+    aspect-ratio: 16/9;
+  }
+</style>

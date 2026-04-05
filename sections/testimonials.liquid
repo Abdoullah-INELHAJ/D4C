@@ -1,0 +1,196 @@
+<div class="testimonials section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-heading text-center">
+        <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="testimonials__inner swiper" data-swiper-testimonials>
+      <div class="swiper-wrapper">
+        {%- for block in section.blocks -%}
+          <div class="swiper-slide testimonial-card" {{ block.shopify_attributes }}>
+            <div class="testimonial-card__inner">
+              <div class="testimonial-card__rating">
+                {%- for i in (1..block.settings.rating) -%}
+                  <span class="star">★</span>
+                {%- endfor -%}
+              </div>
+              <blockquote class="testimonial-card__quote h3">
+                "{{ block.settings.quote | escape }}"
+              </blockquote>
+              <div class="testimonial-card__author">
+                {%- if block.settings.author_image != blank -%}
+                   {{ block.settings.author_image | image_url: width: 100 | image_tag: loading: 'lazy', class: 'author-img' }}
+                {%- endif -%}
+                <div class="author-info">
+                  <p class="author-name h4">{{ block.settings.author_name | escape }}</p>
+                  {%- if block.settings.author_info != blank -%}
+                    <p class="author-detail">{{ block.settings.author_info | escape }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .testimonials {
+    background-color: var(--color-background);
+  }
+  .testimonial-card {
+    height: auto;
+    padding: 2rem;
+  }
+  .testimonial-card__inner {
+    background: white;
+    padding: 4rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .testimonial-card__rating {
+    color: #facc15;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  .testimonial-card__quote {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 3rem;
+    flex: 1;
+  }
+  .testimonial-card__author {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .author-img {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .author-name { margin: 0; }
+  .author-detail { margin: 0; opacity: 0.6; font-size: 1.3rem; }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "What our customers say",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "Rating"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "default": "Absolutely in love with this product! The quality is top-notch and it arrived so quickly.",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "default": "Sarah Johnson",
+          "label": "Author name"
+        },
+        {
+          "type": "text",
+          "id": "author_info",
+          "default": "Verified Buyer",
+          "label": "Author subtitle"
+        },
+        {
+          "type": "image_picker",
+          "id": "author_image",
+          "label": "Author image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

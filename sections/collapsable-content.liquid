@@ -1,0 +1,179 @@
+<div class="collapsable-content section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="collapsable-content__header text-{{ section.settings.heading_alignment }}">
+      <h2 class="collapsable-content__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.description != blank -%}
+        <div class="rte">{{ section.settings.description }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="collapsable-content__grid grid grid--1-col grid--2-col-tablet">
+      <div class="grid__item">
+        {%- for block in section.blocks -%}
+          <div class="collapsable-content__item" {{ block.shopify_attributes }}>
+            <details id="Details-{{ block.id }}-{{ section.id }}" {% if block.settings.open_by_default %}open{% endif %}>
+              <summary id="Summary-{{ block.id }}-{{ section.id }}" class="h4">
+                {{ block.settings.title | escape }}
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="collapsable-content__content rte" id="CollapsableContent-{{ block.id }}-{{ section.id }}">
+                {{ block.settings.row_content }}
+                {{ block.settings.page.content }}
+              </div>
+            </details>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .collapsable-content__header {
+    margin-bottom: 4rem;
+  }
+  .collapsable-content__item {
+    border-bottom: 1px solid rgba(var(--color-base-text), 0.1);
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+  }
+  .collapsable-content__item summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+  }
+  .collapsable-content__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .collapsable-content__item summary svg {
+    transition: transform 0.3s ease;
+  }
+  .collapsable-content__item details[open] summary svg {
+    transform: rotate(180deg);
+  }
+  .collapsable-content__content {
+    margin-top: 1.5rem;
+    font-size: 1.6rem;
+    opacity: 0.8;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Collapsable content",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Collapsable content",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center",
+      "label": "Heading alignment"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collapsable_row",
+      "name": "Collapsable row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Collapsable row",
+          "label": "Heading"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "default": false,
+          "label": "Open by default"
+        },
+        {
+          "type": "richtext",
+          "id": "row_content",
+          "default": "<p>Introduce your brand with a stunning slideshow.</p>",
+          "label": "Row content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Row content from page"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collapsable content",
+      "blocks": [
+        { "type": "collapsable_row" },
+        { "type": "collapsable_row" },
+        { "type": "collapsable_row" }
+      ]
+    }
+  ]
+}
+{% endschema %}

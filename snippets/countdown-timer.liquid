@@ -1,0 +1,63 @@
+<div class="countdown-timer" data-end-date="{{ block.settings.end_date }}" {{ block.shopify_attributes }}>
+  {%- if block.settings.text != blank -%}
+    <p class="countdown-timer__text h4">{{ block.settings.text }}</p>
+  {%- endif -%}
+  <div class="countdown-timer__display">
+    <div class="countdown-timer__item">
+        <span class="countdown-timer__number js-days">00</span>
+        <span class="countdown-timer__label">Days</span>
+    </div>
+    <div class="countdown-timer__item">
+        <span class="countdown-timer__number js-hours">00</span>
+        <span class="countdown-timer__label">Hours</span>
+    </div>
+    <div class="countdown-timer__item">
+        <span class="countdown-timer__number js-minutes">00</span>
+        <span class="countdown-timer__label">Mins</span>
+    </div>
+    <div class="countdown-timer__item">
+        <span class="countdown-timer__number js-seconds">00</span>
+        <span class="countdown-timer__label">Secs</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .countdown-timer {
+    margin: 2rem 0;
+    padding: 2.5rem;
+    background: rgb(var(--color-base-background-2));
+    border-radius: 8px;
+    text-align: center;
+  }
+  .countdown-timer__text {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: rgb(var(--color-base-accent-1));
+  }
+  .countdown-timer__display {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .countdown-timer__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 6rem;
+  }
+  .countdown-timer__number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgb(var(--color-base-text));
+    line-height: 1;
+  }
+  .countdown-timer__label {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.6;
+    margin-top: 0.5rem;
+  }
+</style>

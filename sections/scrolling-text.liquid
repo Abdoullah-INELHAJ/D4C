@@ -1,0 +1,165 @@
+<div class="scrolling-text section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="scrolling-text__wrapper" style="--speed: {{ section.settings.speed }}s;">
+    <div class="scrolling-text__inner">
+      {%- for i in (1..5) -%}
+        {%- for block in section.blocks -%}
+          <div class="scrolling-text__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 100 | image_tag: loading: 'lazy', class: 'scrolling-text__image' }}
+            {%- endif -%}
+            <span class="scrolling-text__content {{ section.settings.text_size }}">{{ block.settings.text | escape }}</span>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .scrolling-text {
+    overflow: hidden;
+    background-color: var(--color-background);
+    border-top: 1px solid rgba(var(--color-base-text), 0.1);
+    border-bottom: 1px solid rgba(var(--color-base-text), 0.1);
+  }
+  .scrolling-text__wrapper {
+    display: flex;
+    width: fit-content;
+    animation: scroll {{ section.settings.speed }}s linear infinite {% if section.settings.direction == 'right' %}reverse{% endif %};
+  }
+  .scrolling-text__inner {
+    display: flex;
+    align-items: center;
+    gap: 6rem;
+    padding-left: 6rem;
+  }
+  .scrolling-text__item {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    white-space: nowrap;
+  }
+  .scrolling-text__content {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.1rem;
+    line-height: 1;
+  }
+  .scrolling-text__image {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-20%); }
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .h1-extra { font-size: 8rem; }
+  .h0-extra { font-size: 12rem; }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Scrolling text",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll speed",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left",
+      "label": "Direction"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" },
+        { "value": "h1-extra", "label": "Extra Large" }
+      ],
+      "default": "h1",
+      "label": "Text size"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Premium Shopify Theme",
+          "label": "Text content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Optional image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling text",
+      "blocks": [
+        { "type": "text", "settings": { "text": "Shop New Arrivals" } },
+        { "type": "text", "settings": { "text": "Up to 50% Off" } },
+        { "type": "text", "settings": { "text": "Limited Time Only" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,288 @@
+<div class="countdown-banner section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="countdown-banner__wrapper banner--{{ section.settings.height }} {% if section.settings.image == blank %}placeholder{% endif %}">
+      {%- if section.settings.image != blank -%}
+        <div class="countdown-banner__media">
+          {{ section.settings.image | image_url: width: 3840 | image_tag: loading: 'lazy' }}
+        </div>
+      {%- else -%}
+        <div class="countdown-banner__media placeholder">
+           {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+      <div class="countdown-banner__overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+      
+      <div class="countdown-banner__content center">
+        <div class="countdown-banner__box">
+          <h2 class="h0">{{ section.settings.heading | escape }}</h2>
+          <p class="h3">{{ section.settings.subheading | escape }}</p>
+
+          <div class="countdown-timer" data-countdown="{{ section.settings.end_date }}">
+            <div class="countdown-timer__item">
+              <span class="countdown-timer__value" id="days-{{ section.id }}">00</span>
+              <span class="countdown-timer__label">Days</span>
+            </div>
+            <div class="countdown-timer__item">
+              <span class="countdown-timer__value" id="hours-{{ section.id }}">00</span>
+              <span class="countdown-timer__label">Hours</span>
+            </div>
+            <div class="countdown-timer__item">
+              <span class="countdown-timer__value" id="minutes-{{ section.id }}">00</span>
+              <span class="countdown-timer__label">Minutes</span>
+            </div>
+            <div class="countdown-timer__item">
+              <span class="countdown-timer__value" id="seconds-{{ section.id }}">00</span>
+              <span class="countdown-timer__label">Seconds</span>
+            </div>
+          </div>
+
+          {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.link }}" class="button button--primary button--xl">
+               {{ section.settings.button_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .countdown-banner__wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner--small { height: 40rem; }
+  .banner--medium { height: 55rem; }
+  .banner--large { height: 75rem; }
+
+  .countdown-banner__media {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     z-index: 0;
+  }
+  .countdown-banner__media img { width: 100%; height: 100%; object-fit: cover; }
+  .countdown-banner__overlay {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: #000;
+     z-index: 1;
+  }
+  .countdown-banner__content {
+     position: relative;
+     z-index: 2;
+     padding: 5rem;
+     color: white;
+  }
+  .countdown-banner__box h2 { font-weight: 900; margin-bottom: 2rem; }
+  
+  .countdown-timer {
+     display: flex;
+     justify-content: center;
+     gap: 3rem;
+     margin-bottom: 4rem;
+  }
+  .countdown-timer__item {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+  }
+  .countdown-timer__value {
+     font-size: 6rem;
+     font-weight: 900;
+     line-height:1;
+     letter-spacing: -0.2rem;
+  }
+  .countdown-timer__label {
+     text-transform: uppercase;
+     font-size: 1.2rem;
+     font-weight: 700;
+     opacity: 0.8;
+     letter-spacing: 0.1rem;
+     margin-top: 1rem;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .countdown-timer { gap: 1.5rem; }
+    .countdown-timer__value { font-size: 4rem; }
+    .countdown-timer__label { font-size: 1rem; }
+  }
+{%- endstyle -%}
+
+<script>
+  function initCountdown() {
+    const timerEls = document.querySelectorAll('[data-countdown]');
+    timerEls.forEach(el => {
+      const targetDate = new Date(el.dataset.countdown).getTime();
+      const sectionId = el.closest('.countdown-timer').dataset.countdown ? el.closest('.countdown-banner').id : el.id; // Corrected logic below
+
+      const updateTimer = () => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+           return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const parent = el.closest('.countdown-banner');
+        const sid = parent.querySelector('.countdown-banner').id; // Simplified
+
+        const dEl = el.querySelector('#days-{{ section.id }}');
+        const hEl = el.querySelector('#hours-{{ section.id }}');
+        const mEl = el.querySelector('#minutes-{{ section.id }}');
+        const sEl = el.querySelector('#seconds-{{ section.id }}');
+
+        if(dEl) dEl.innerText = days < 10 ? '0' + days : days;
+        if(hEl) hEl.innerText = hours < 10 ? '0' + hours : hours;
+        if(mEl) mEl.innerText = minutes < 10 ? '0' + minutes : minutes;
+        if(sEl) sEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+      };
+
+      setInterval(updateTimer, 1000);
+      updateTimer();
+    });
+  }
+  // Simplified script to avoid liquid variable in JS block if possible, but for simplicity here it's fine.
+  // Actually, I'll fix the selector logic to be more robust.
+
+  document.addEventListener('DOMContentLoaded', () => {
+     setInterval(() => {
+        document.querySelectorAll('[data-countdown]').forEach(el => {
+           const targetDate = new Date(el.dataset.countdown).getTime();
+           const now = new Date().getTime();
+           const distance = targetDate - now;
+           if (distance < 0) return;
+           
+           const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+           const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+           const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+           const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+           el.querySelector('[id^="days-"]').innerText = days < 10 ? '0' + days : days;
+           el.querySelector('[id^="hours-"]').innerText = hours < 10 ? '0' + hours : hours;
+           el.querySelector('[id^="minutes-"]').innerText = minutes < 10 ? '0' + minutes : minutes;
+           el.querySelector('[id^="seconds-"]').innerText = seconds < 10 ? '0' + seconds : seconds;
+        });
+     }, 1000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Countdown banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Flash Sale",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Everything 50% Off for 24 Hours",
+      "label": "Subheading"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "default": "Dec 31, 2026 23:59:59",
+      "info": "Format: Month Day, Year HH:MM:SS (e.g., Dec 31, 2024 23:59:59)",
+      "label": "End date"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium",
+      "label": "Banner height"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Shop the Sale",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown banner"
+    }
+  ]
+}
+{% endschema %}

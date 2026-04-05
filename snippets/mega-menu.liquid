@@ -1,0 +1,80 @@
+<div class="mega-menu color-{{ section.settings.color_scheme }} gradient" id="MegaMenu-{{ link.handle }}">
+  <div class="page-width">
+    <div class="mega-menu__container">
+      <ul class="mega-menu__list list-unstyled" role="list">
+        {%- for childlink in link.links -%}
+          <li>
+            <a href="{{ childlink.url }}" class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+              {{ childlink.title | escape }}
+            </a>
+            {%- if childlink.links != blank -%}
+              <ul class="list-unstyled" role="list">
+                {%- for grandchildlink in childlink.links -%}
+                  <li>
+                    <a href="{{ grandchildlink.url }}" class="mega-menu__link link{% if grandchildlink.current %} mega-menu__link--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                      {{ grandchildlink.title | escape }}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {% comment %} 
+        Here we could add featured images or products if needed 
+        based on block settings if we had them. 
+      {% endcomment %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    background-color: var(--color-background);
+    border-bottom: 1px solid rgba(var(--color-base-text), 0.1);
+    padding: 4rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1rem);
+    transition: all 0.3s ease;
+  }
+
+  details[open] > .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mega-menu__container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+  }
+
+  .mega-menu__list {
+    display: contents;
+  }
+
+  .mega-menu__link {
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 1.4rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .mega-menu__link--level-2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+  }
+</style>

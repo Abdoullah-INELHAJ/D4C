@@ -1,0 +1,129 @@
+<div class="main-article section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <article class="article-template page-width page-width--narrow">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'featured_image' -%}
+          {%- if article.image -%}
+            <div class="article-template__hero-container">
+              <div class="article-template__hero media media--landscape">
+                 {{ article.image | image_url: width: 1100 | image_tag: loading: 'lazy' }}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- when 'heading' -%}
+          <header class="article-template__header center">
+            <h1 class="h0">{{ article.title | escape }}</h1>
+            {%- if block.settings.show_date -%}
+              <span class="article-template__date">{{ article.published_at | date: "%B %d, %Y" }}</span>
+            {%- endif -%}
+            {%- if block.settings.show_author -%}
+              <span class="article-template__author">By {{ article.author }}</span>
+            {%- endif -%}
+          </header>
+        {%- when 'content' -%}
+          <div class="article-template__content rte">
+             {{ article.content }}
+          </div>
+        {%- when 'share' -%}
+          <div class="article-template__social-sharing center">
+             {% render 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+
+    <div class="article-template__back center">
+      <a href="{{ blog.url }}" class="link">
+        Back to {{ blog.title }}
+      </a>
+    </div>
+  </article>
+</div>
+
+{%- style -%}
+  .article-template__header { margin-bottom: 4rem; }
+  .article-template__date { font-size: 1.4rem; font-weight: 700; opacity: 0.6; display: block; margin-top: 1rem; }
+  .article-template__author { font-size: 1.4rem; font-weight: 700; opacity: 0.6; display: block; margin-top: 0.5rem; }
+  .article-template__hero-container { margin-bottom: 5rem; border-radius: 16px; overflow: hidden; }
+  .article-template__content { font-size: 1.8rem; line-height: 1.8; margin-bottom: 6rem; }
+  .article-template__back { margin-top: 5rem; border-top: 1px solid rgba(var(--color-base-text), 0.1); padding-top: 3rem; }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Main article",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_image",
+      "name": "Featured image",
+      "limit": 1
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_date",
+          "default": true,
+          "label": "Show date"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_author",
+          "default": false,
+          "label": "Show author"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "Content",
+      "limit": 1
+    },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

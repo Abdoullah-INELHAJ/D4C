@@ -1,0 +1,105 @@
+<div class="main-list-collections section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="list-collections__header center">
+       <h1 class="h0">{{ 'sections.collection_list.title' | t | default: 'Collections' }}</h1>
+    </div>
+
+    {%- paginate collections by section.settings.collections_per_page -%}
+       <div class="grid grid--1-col grid--{{ section.settings.columns_desktop }}-col-desktop">
+          {%- for collection in collections -%}
+             <div class="grid__item">
+                <a href="{{ collection.url }}" class="collection-card-item">
+                   <div class="collection-card-item__media media media--square">
+                      {%- if collection.featured_image != blank -%}
+                         {{ collection.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy' }}
+                      {%- else -%}
+                         {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%}
+                   </div>
+                   <div class="collection-card-item__info center">
+                      <h3 class="h2">{{ collection.title }}</h3>
+                      <p class="link">View Products</p>
+                   </div>
+                </a>
+             </div>
+          {%- endfor -%}
+       </div>
+
+       {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate %}
+       {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{%- style -%}
+  .list-collections__header { margin-bottom: 5rem; }
+  .collection-card-item { display: block; position: relative; overflow: hidden; border-radius: 16px; height: 100%; color: white; text-decoration: none; }
+  .collection-card-item__media img { transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); height: 100%; width: 100%; object-fit: cover; }
+  .collection-card-item:hover .collection-card-item__media img { transform: scale(1.05); }
+  .collection-card-item__info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); z-index: 1; transition: background 0.3s ease; }
+  .collection-card-item:hover .collection-card-item__info { background: rgba(0,0,0,0.5); }
+  .collection-card-item__info h3 { margin-bottom: 1rem; font-weight: 800; }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Main list collections",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "collections_per_page",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 12,
+      "label": "Collections per page"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "label": "Columns on desktop"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

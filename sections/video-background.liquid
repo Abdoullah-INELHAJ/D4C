@@ -1,0 +1,211 @@
+<div class="video-background section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="video-bg__wrapper banner--{{ section.settings.height }}">
+      <div class="video-bg__media">
+        {%- if section.settings.video_url != blank -%}
+          <video autoplay muted loop playsinline class="video-bg__video">
+            <source src="{{ section.settings.video_url }}" type="video/mp4">
+          </video>
+        {%- else -%}
+          <div class="video-bg__placeholder">{{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+        {%- endif -%}
+        <div class="video-bg__overlay" style="background: rgba(0,0,0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});"></div>
+      </div>
+
+      <div class="video-bg__content video-bg__content--{{ section.settings.content_position }}">
+        <div class="video-bg__box text-center">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="rte" {{ block.shopify_attributes }}>{{ section.settings.text }}</div>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.link }}" class="button button--xl">
+              {{ section.settings.button_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .video-bg__wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+  }
+  .banner--small { height: 35rem; }
+  .banner--medium { height: 50rem; }
+  .banner--large { height: 75rem; }
+
+  .video-bg__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .video-bg__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video-bg__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  .video-bg__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  .video-bg__content--top { align-items: flex-start; margin-top: 5rem; }
+  .video-bg__content--middle { align-items: center; }
+  .video-bg__content--bottom { align-items: flex-end; margin-bottom: 5rem; }
+
+  .video-bg__box {
+    color: white;
+    max-width: 70rem;
+  }
+  .video-bg__box h2 {
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+  }
+  .video-bg__box .rte {
+    font-size: 2rem;
+    margin-bottom: 4rem;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Video background",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (MP4 link)"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium",
+      "label": "Height"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Amazing Background",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Catch the eye of your visitors with a stunning video background.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Shop Collection",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "middle",
+      "label": "Content position"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video background"
+    }
+  ]
+}
+{% endschema %}

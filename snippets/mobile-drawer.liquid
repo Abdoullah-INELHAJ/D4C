@@ -1,0 +1,109 @@
+<div class="mobile-drawer" id="MobileMenu">
+  <div class="mobile-drawer__inner">
+    <div class="mobile-drawer__header">
+      <button class="mobile-drawer__close" data-menu-toggle="MobileMenu">
+        {% render 'icon-close' %}
+      </button>
+    </div>
+    
+    <nav class="mobile-drawer__nav">
+      <ul class="mobile-drawer__list list-unstyled">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            <a href="{{ link.url }}" class="mobile-drawer__link h2{% if link.current %} mobile-drawer__link--active{% endif %}">
+              {{ link.title | escape }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+    
+    <div class="mobile-drawer__footer">
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="mobile-drawer__footer-link">
+          {% render 'icon-account' %}
+          <span>{{ 'customer.account_fallback' | t }}</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-drawer.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-drawer__inner {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 40rem;
+    height: 100%;
+    background-color: var(--color-background);
+    padding: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-drawer.is-open .mobile-drawer__inner {
+    left: 0;
+  }
+
+  .mobile-drawer__header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 3rem;
+  }
+
+  .mobile-drawer__close {
+    background: none;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+  }
+
+  .mobile-drawer__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .mobile-drawer__link {
+    text-decoration: none;
+    color: inherit;
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+
+  .mobile-drawer__footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    border-top: 1px solid rgba(var(--color-base-text), 0.1);
+  }
+
+  .mobile-drawer__footer-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+</style>

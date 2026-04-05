@@ -1,0 +1,38 @@
+{%- comment -%}
+  Usage: {% render 'icon-library', icon: 'truck' %}
+{%- endcomment -%}
+
+{%- case icon -%}
+  {%- when 'truck' -%}
+    {% render 'icon-truck' %}
+  {%- when 'heart' -%}
+    {% render 'icon-heart' %}
+  {%- when 'shield' -%}
+    {% render 'icon-shield' %}
+  {%- when 'return' -%}
+    {% render 'icon-return' %}
+  {%- when 'star' -%}
+    {% render 'icon-star' %}
+  {%- when 'plus' -%}
+    {% render 'icon-plus' %}
+  {%- when 'minus' -%}
+    {% render 'icon-minus' %}
+  {%- when 'remove' -%}
+    {% render 'icon-remove' %}
+  {%- when 'discount' -%}
+    {% render 'icon-discount' %}
+  {%- when 'error' -%}
+    {% render 'icon-error' %}
+  {%- when 'close' -%}
+    {% render 'icon-close' %}
+  {%- when 'checkmark' -%}
+    {% render 'icon-checkmark' %}
+  {%- when 'pause' -%}
+    {% render 'icon-pause' %}
+  {%- when 'play' -%}
+    {% render 'icon-play' %}
+  {%- when 'unmute' -%}
+    {% render 'icon-unmute' %}
+  {%- when 'mute' -%}
+    {% render 'icon-mute' %}
+{%- endcase -%}

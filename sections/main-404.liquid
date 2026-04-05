@@ -1,0 +1,66 @@
+<div class="main-404 section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width center">
+    <div class="404__content">
+       <span class="404__subtitle h4">{{ 'general.404.subtext' | t | default: '404' }}</span>
+       <h1 class="h0">{{ 'general.404.title' | t | default: 'Page Not Found' }}</h1>
+       <div class="404__text rte">
+          <p>{{ 'general.404.description' | t | default: "The page you are looking for doesn't exist or has been moved." }}</p>
+       </div>
+       <div class="404__buttons">
+          <a href="{{ routes.root_url }}" class="button button--primary button--xl">
+             {{ 'general.404.link' | t | default: 'Return to Home' }}
+          </a>
+       </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .main-404 { min-height: 60vh; display: flex; align-items: center; }
+  .404__subtitle { color: rgb(var(--color-base-accent-1)); font-weight: 800; margin-bottom: 2rem; display: block; letter-spacing: 0.2rem; }
+  .404__text { margin-bottom: 4rem; opacity: 0.8; font-size: 1.8rem; }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Main 404",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 100
+    }
+  ]
+}
+{% endschema %}

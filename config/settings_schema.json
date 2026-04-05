@@ -1,0 +1,212 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "D4C Premium",
+    "theme_version": "1.1.0",
+    "theme_author": "Antigravity",
+    "theme_documentation_url": "https://github.com/antigravity/d4c",
+    "theme_support_url": "https://support.antigravity.fr"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "label": "Color schemes",
+        "default": [
+          {
+            "id": "scheme-1",
+            "label": "Scheme 1",
+            "settings": {
+              "background": "#FFFFFF",
+              "text": "#121212",
+              "button": "#121212",
+              "button_label": "#FFFFFF",
+              "secondary_button_label": "#121212",
+              "shadow": "#121212"
+            }
+          },
+          {
+            "id": "scheme-2",
+            "label": "Scheme 2",
+            "settings": {
+              "background": "#F3F3F3",
+              "text": "#121212",
+              "button": "#121212",
+              "button_label": "#FFFFFF",
+              "secondary_button_label": "#121212",
+              "shadow": "#121212"
+            }
+          },
+          {
+            "id": "scheme-3",
+            "label": "Scheme 3",
+            "settings": {
+              "background": "#121212",
+              "text": "#FFFFFF",
+              "button": "#FFFFFF",
+              "button_label": "#121212",
+              "secondary_button_label": "#FFFFFF",
+              "shadow": "#000000"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Header font",
+        "default": "outfit_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "inter_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_body_scale",
+        "min": 100,
+        "max": 150,
+        "step": 5,
+        "unit": "%",
+        "label": "Body font scale",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "font_heading_scale",
+        "min": 100,
+        "max": 200,
+        "step": 5,
+        "unit": "%",
+        "label": "Heading font scale",
+        "default": 100
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1000,
+        "max": 1600,
+        "step": 10,
+        "unit": "px",
+        "label": "Page width",
+        "default": 1200
+      },
+      {
+         "type": "range",
+         "id": "spacing_sections",
+         "min": 0,
+         "max": 100,
+         "step": 4,
+         "unit": "px",
+         "label": "Section spacing",
+         "default": 40
+      }
+    ]
+  },
+  {
+    "name": "Buttons",
+    "settings": [
+      {
+        "type": "range",
+        "id": "buttons_radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Corner radius",
+        "default": 8
+      },
+      {
+         "type": "range",
+         "id": "buttons_border_thickness",
+         "min": 0,
+         "max": 4,
+         "step": 1,
+         "unit": "px",
+         "label": "Border thickness",
+         "default": 1
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "default": "drawer",
+        "options": [
+          { "value": "drawer", "label": "Drawer" },
+          { "value": "page", "label": "Page" }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "default": 50,
+        "info": "In currency units (ex: 50 for $50)"
+      },
+      {
+        "type": "header",
+        "content": "Cart Upsell"
+      },
+      {
+        "type": "product",
+        "id": "cart_upsell_product",
+        "label": "Upsell product"
+      },
+      {
+        "type": "text",
+        "id": "cart_upsell_heading",
+        "label": "Upsell heading",
+        "default": "Frequently bought together"
+      }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 300,
+        "step": 10,
+        "unit": "px",
+        "label": "Logo width",
+        "default": 150
+      }
+    ]
+  },
+  {
+     "name": "Custom CSS",
+     "settings": [
+        {
+           "type": "textarea",
+           "id": "custom_css",
+           "label": "Global Custom CSS"
+        }
+     ]
+  }
+]

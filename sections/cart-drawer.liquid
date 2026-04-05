@@ -1,0 +1,143 @@
+<cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
+  <div id="CartDrawer" class="cart-drawer">
+    <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
+    <div class="drawer__inner" role="dialog" aria-modal="true" aria-label="{{ 'sections.cart.title' | t }}" tabindex="-1">
+       {%- if cart == empty -%}
+        <div class="drawer__inner-empty">
+          <div class="cart-drawer__warnings center">
+            <div class="cart-drawer__empty-content">
+              <h2 class="cart-drawer__empty-text h2">{{ 'sections.cart.empty' | t }}</h2>
+              <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
+              <a href="{{ routes.all_products_collection_url }}" class="button">
+                {{ 'general.continue_shopping' | t }}
+              </a>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="drawer__header">
+          <h2 class="drawer__heading h2">{{ 'sections.cart.title' | t }}</h2>
+          <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
+        </div>
+
+        {% render 'free-shipping-bar' %}
+
+        <cart-drawer-items class="{% if cart == empty %} is-empty{% endif %}">
+          <form action="{{ routes.cart_url }}" id="CartDrawer-Form" class="cart__contents critical-hidden" method="post">
+            <div id="CartDrawer-CartItems" class="drawer__contents js-contents">
+              {%- if cart != empty -%}
+                <div class="drawer__cart-items-wrapper">
+                  {%- for item in cart.items -%}
+                    {% render 'cart-item', item: item %}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </form>
+        </cart-drawer-items>
+
+        <div class="drawer__footer">
+          <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
+            <div class="totals" role="status">
+              <h2 class="totals__subtotal h3">{{ 'sections.cart.subtotal' | t }}</h2>
+              <p class="totals__subtotal-value h3">{{ cart.total_price | money_with_currency }}</p>
+            </div>
+
+            {% render 'cart-upsells' %}
+
+            {%- if cart.cart_level_discount_applications.size > 0 -%}
+              <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                {%- for discount in cart.cart_level_discount_applications -%}
+                  <li class="discounts__discount totals__discount">
+                    {%- render 'icon-discount' -%}
+                    {{ discount.title }}
+                    (-{{ discount.total_allocated_amount | money }})
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            <div class="cart__ctas" {{ block.shopify_attributes }}>
+              <noscript>
+                <button type="submit" class="cart__update-button button button--secondary" form="CartDrawer-Form">
+                  {{ 'sections.cart.update' | t }}
+                </button>
+              </noscript>
+
+              <button type="submit" id="CartDrawer-Checkout" class="cart__checkout-button button" name="checkout" form="CartDrawer-Form"{% if cart == empty %} disabled{% endif %}>
+                {{ 'sections.cart.checkout' | t }}
+              </button>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</cart-drawer>
+
+<style>
+  .drawer {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    background-color: rgba(var(--color-base-text), 0.5);
+    transition: visibility var(--duration-default) ease;
+  }
+
+  .drawer.is-empty .drawer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .drawer__inner {
+    height: 100%;
+    width: 40rem;
+    max-width: calc(100vw - 3rem);
+    padding: 0 2.5rem;
+    border: 0.1rem solid rgba(var(--color-base-text), 0.2);
+    border-right: 0;
+    background-color: rgb(var(--color-base-background-1));
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform var(--duration-default) ease;
+  }
+
+  .drawer.active .drawer__inner {
+    transform: translateX(0);
+  }
+
+  .drawer__header {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .drawer__contents {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .drawer__footer {
+    border-top: 1px solid rgba(var(--color-base-text), 0.1);
+    padding: 1.5rem 0;
+  }
+
+  .totals {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .cart__checkout-button {
+    width: 100%;
+  }
+</style>

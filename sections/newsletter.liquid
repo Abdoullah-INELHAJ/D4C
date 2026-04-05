@@ -1,0 +1,201 @@
+<div class="newsletter section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="newsletter__wrapper text-center">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            <h2 class="{{ block.settings.heading_size }}">{{ block.settings.heading | escape }}</h2>
+          {%- when 'paragraph' -%}
+            <div class="newsletter__subtext rte" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </div>
+          {%- when 'email_form' -%}
+            <div {{ block.shopify_attributes }}>
+              {% form 'customer', class: 'newsletter-form' %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="newsletter-form__field-wrapper">
+                  <div class="field">
+                    <input
+                      id="NewsletterForm--{{ section.id }}"
+                      type="email"
+                      name="contact[email]"
+                      class="field__input"
+                      value="{{ form.email }}"
+                      aria-required="true"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      autocomplete="email"
+                      {% if form.errors %}
+                        autofocus
+                        aria-invalid="true"
+                        aria-describedby="Newsletter-error--{{ section.id }}"
+                      {% elsif form.posted_successfully? %}
+                        aria-describedby="Newsletter-success--{{ section.id }}"
+                      {% endif %}
+                      placeholder="{{ 'newsletter.label' | t | default: 'Email' }}"
+                      required
+                    >
+                    <label class="field__label visually-hidden" for="NewsletterForm--{{ section.id }}">
+                      {{ 'newsletter.label' | t | default: 'Email' }}
+                    </label>
+                    <button type="submit" class="newsletter-form__button button" name="commit" id="Subscribe" aria-label="{{ 'newsletter.button_label' | t | default: 'Subscribe' }}">
+                      {{ 'newsletter.button_label' | t | default: 'Subscribe' }}
+                    </button>
+                  </div>
+                  {%- if form.errors -%}
+                    <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">
+                      {% render 'icon-error' %}
+                      {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+                    </small>
+                  {%- endif -%}
+                </div>
+                {%- if form.posted_successfully? -%}
+                  <h3 class="newsletter-form__message newsletter-form__message--success form__message" id="Newsletter-success--{{ section.id }}" tabindex="-1" autofocus>
+                    {% render 'icon-success' %}
+                    {{ 'newsletter.success' | t | default: 'Thank you for subscribing!' }}
+                  </h3>
+                {%- endif -%}
+              {% endform %}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .newsletter__wrapper {
+    max-width: 70rem;
+    margin: 0 auto;
+  }
+  .newsletter-form {
+    max-width: 50rem;
+    margin: 3rem auto 0;
+  }
+  .newsletter-form__field-wrapper {
+    position: relative;
+  }
+  .newsletter-form .field {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .newsletter-form .field__input {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    border: 1px solid rgba(var(--color-base-text), 0.2);
+    border-radius: 8px;
+    background: white;
+  }
+  .newsletter-form__button {
+    padding: 1.6rem 3rem;
+  }
+  
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .newsletter-form .field {
+      flex-direction: column;
+    }
+    .newsletter-form__button {
+      width: 100%;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Join the community",
+          "label": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            { "value": "h2", "label": "Small" },
+            { "value": "h1", "label": "Medium" },
+            { "value": "h0", "label": "Large" }
+          ],
+          "default": "h1",
+          "label": "Heading size"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "name": "Subtext",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Sign up to receive updates, access to exclusive deals, and more.</p>",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "email_form",
+      "name": "Email form",
+      "limit": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "paragraph" },
+        { "type": "email_form" }
+      ]
+    }
+  ]
+}
+{% endschema %}

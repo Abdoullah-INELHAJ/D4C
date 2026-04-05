@@ -1,0 +1,153 @@
+<div class="main-cart section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="cart-header flex justify-between align-end">
+       <h1 class="h0">{{ 'sections.cart.title' | t | default: 'Your Cart' }}</h1>
+       <a href="{{ routes.all_products_collection_url }}" class="link">
+          {{ 'general.continue_shopping' | t | default: 'Continue Shopping' }}
+       </a>
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+       <form action="{{ routes.cart_url }}" method="post" id="cart" class="cart__contents">
+          <div class="cart__items">
+             <table class="cart-items">
+                <thead>
+                   <tr>
+                      <th colspan="2">{{ 'sections.cart.headings.product' | t | default: 'Product' }}</th>
+                      <th>{{ 'sections.cart.headings.total' | t | default: 'Total' }}</th>
+                      <th colspan="1">{{ 'sections.cart.headings.quantity' | t | default: 'Quantity' }}</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   {%- for item in cart.items -%}
+                      <tr id="CartItem-{{ item.index | plus: 1 }}">
+                         <td class="cart-item__media">
+                            {%- if item.image -%}
+                               {{ item.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'cart-item__image' }}
+                            {%- endif -%}
+                         </td>
+                         <td class="cart-item__details">
+                            <a href="{{ item.url }}" class="cart-item__name h4">{{ item.product.title | escape }}</a>
+                            {%- if item.product.has_only_default_variant == false -%}
+                               <p class="cart-item__variant">{{ item.variant.title }}</p>
+                            {%- endif -%}
+                            <div class="cart-item__price">
+                               {{ item.final_price | money }}
+                            </div>
+                         </td>
+                         <td class="cart-item__totals">
+                            {{ item.final_line_price | money }}
+                         </td>
+                         <td class="cart-item__quantity">
+                            <div class="quantity">
+                               <input class="quantity__input"
+                                      type="number"
+                                      name="updates[]"
+                                      value="{{ item.quantity }}"
+                                      id="Quantity-{{ item.index | plus: 1 }}"
+                                      min="0"
+                                      data-index="{{ item.index | plus: 1 }}">
+                            </div>
+                            <a href="{{ item.url_to_remove }}" class="button button--tertiary">Remove</a>
+                         </td>
+                      </tr>
+                   {%- endfor -%}
+                </tbody>
+             </table>
+          </div>
+
+          <div class="cart__footer">
+             <div class="cart__blocks">
+                <div class="cart__subtotal flex justify-between">
+                   <h2 class="h3">Subtotal</h2>
+                   <p class="h3">{{ cart.total_price | money_with_currency }}</p>
+                </div>
+                <p class="tax-note">Taxes and shipping calculated at checkout</p>
+                <div class="cart__ctas">
+                   <button type="submit" name="checkout" class="button button--primary button--full-width button--xl">
+                      Checkout
+                   </button>
+                </div>
+             </div>
+          </div>
+       </form>
+    {%- else -%}
+       <div class="cart__empty center">
+          <h2 class="h2">{{ 'sections.cart.empty' | t | default: 'Your cart is empty' }}</h2>
+          <a href="{{ routes.all_products_collection_url }}" class="button button--primary">
+             Start Shopping
+          </a>
+       </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .cart-header { margin-bottom: 5rem; }
+  .cart-items { width: 100%; border-collapse: collapse; }
+  .cart-items th { text-align: left; padding: 2rem 0; border-bottom: 1px solid rgba(var(--color-base-text), 0.1); text-transform: uppercase; font-size: 1.2rem; letter-spacing: 0.1rem; }
+  .cart-item__media { width: 12rem; padding: 2.5rem 0; }
+  .cart-item__image { width: 10rem; border-radius: 8px; }
+  .cart-item__details { padding: 2.5rem 2rem; }
+  .cart-item__name { text-decoration: none; color: inherit; font-weight: 800; }
+  .cart-item__variant { font-size: 1.4rem; opacity: 0.6; margin: 0.5rem 0; }
+  .cart__footer { margin-top: 5rem; display: flex; justify-content: flex-end; }
+  .cart__blocks { width: 100%; max-width: 45rem; background: rgba(var(--color-base-text), 0.03); padding: 4rem; border-radius: 12px; }
+  .cart__subtotal { margin-bottom: 1.5rem; }
+  .tax-note { font-size: 1.4rem; opacity: 0.6; margin-bottom: 3rem; }
+
+  @media screen and (max-width: 749px) {
+    .cart-items thead { display: none; }
+    .cart-items tr { display: flex; flex-direction: column; padding: 3rem 0; border-bottom: 1px solid rgba(var(--color-base-text), 0.1); }
+    .cart-item__media { width: 100%; }
+    .cart-item__image { width: 100%; max-width: 15rem; }
+    .cart-item__details { padding: 2rem 0; }
+    .cart-item__totals { display: none; }
+    .cart__blocks { max-width: 100%; }
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Main cart",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

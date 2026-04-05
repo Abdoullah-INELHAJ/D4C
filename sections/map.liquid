@@ -1,0 +1,141 @@
+<div class="map-section section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="map__grid grid grid--1-col grid--2-col-desktop">
+      <div class="grid__item map__content">
+        <h2 class="{{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+        <div class="rte">{{ section.settings.address }}</div>
+        {%- if section.settings.button_label != blank -%}
+          <a href="https://www.google.com/maps/search/?api=1&query={{ section.settings.map_address | url_encode }}" target="_blank" class="button">
+            {{ section.settings.button_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+      <div class="grid__item map__media">
+        <div class="map__iframe-container">
+           {%- if section.settings.map_iframe != blank -%}
+              {{ section.settings.map_iframe }}
+           {%- else -%}
+              <div class="map-placeholder">
+                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+           {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .map__grid { align-items: center; gap: 4rem; }
+  .map__content { padding: 4rem; background: rgba(var(--color-base-text), 0.03); border-radius: 12px; }
+  .map__content h2 { margin-bottom: 2rem; font-weight: 800; }
+  .map__iframe-container {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 40rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  }
+  .map__iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  .map-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Map",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Visit our store",
+      "label": "Heading"
+    },
+    {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+          { "value": "h2", "label": "Small" },
+          { "value": "h1", "label": "Medium" },
+          { "value": "h0", "label": "Large" }
+       ],
+       "default": "h1",
+       "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "address",
+      "default": "<p>123 Street Ave, New York, NY 10001</p>",
+      "label": "Store info"
+    },
+    {
+      "type": "text",
+      "id": "map_address",
+      "label": "Google Maps Address",
+      "info": "Used for the 'Get Directions' link."
+    },
+    {
+      "type": "html",
+      "id": "map_iframe",
+      "label": "Google Maps Embed Code",
+      "info": "Paste the <iframe> from Google Maps Share menu."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Get Directions",
+      "label": "Button label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Map"
+    }
+  ]
+}
+{% endschema %}

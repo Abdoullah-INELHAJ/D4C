@@ -1,0 +1,197 @@
+<div class="slideshow-video section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="slideshow__inner swiper" data-swiper-video>
+    <div class="swiper-wrapper">
+      {%- for block in section.blocks -%}
+        <div class="slideshow__slide swiper-slide" {{ block.shopify_attributes }}>
+          <div class="slideshow-video__media">
+            {%- if block.settings.video_url != blank -%}
+              <custom-video-player class="custom-video">
+                <video class="video-bg" autoplay muted loop playsinline>
+                  <source src="{{ block.settings.video_url }}" type="video/mp4">
+                </video>
+                <div class="custom-video__controls">
+                   <button class="custom-video__play-pause" aria-label="Play/Pause">{% render 'icon-pause' %}</button>
+                   <div class="custom-video__progress">
+                      <div class="custom-video__progress-bar"></div>
+                   </div>
+                   <button class="custom-video__mute" aria-label="Mute/Unmute">{% render 'icon-unmute' %}</button>
+                </div>
+              </custom-video-player>
+            {%- elsif block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 3840 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840' }}
+            {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <div class="video-overlay" style="opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+          </div>
+          
+          <div class="slideshow__content slideshow__content--{{ block.settings.box_align }} page-width">
+             <div class="slideshow__box content-container content-container--full-width-mobile">
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="slideshow__heading h0">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.subheading != blank -%}
+                  <div class="slideshow__text rte h2">{{ block.settings.subheading }}</div>
+                {%- endif -%}
+                {%- if block.settings.button_label != blank -%}
+                  <a href="{{ block.settings.link }}" class="button button--primary button--xl">
+                    {{ block.settings.button_label | escape }}
+                  </a>
+                {%- endif -%}
+             </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+{%- style -%}
+  .slideshow-video__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .video-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+  .slideshow__slide {
+    height: 80vh;
+    min-height: 60rem;
+  }
+  .button--xl {
+    padding: 2rem 4rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Video slideshow",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_slide",
+      "name": "Video slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL (MP4 direct link)",
+          "info": "Upload to Shopify Files and paste the link here."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Fallback image"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "min": 0,
+          "max": 90,
+          "step": 10,
+          "unit": "%",
+          "label": "Overlay opacity",
+          "default": 30
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Premium Experience",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "default": "The future of Shopify themes is here.",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Shop Now",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "box_align",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left",
+          "label": "Box alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video slideshow",
+      "blocks": [
+        { "type": "video_slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

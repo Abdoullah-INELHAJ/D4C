@@ -1,0 +1,75 @@
+<div class="shipping-checkpoints" {{ block.shopify_attributes }}>
+  <div class="shipping-checkpoints__track">
+    <div class="shipping-checkpoints__line"></div>
+    <div class="shipping-checkpoints__step is-active">
+      <div class="shipping-checkpoints__dot"></div>
+      <div class="shipping-checkpoints__label">{{ 'products.product.shipping.ordered' | t | default: 'Ordered' }}</div>
+    </div>
+    <div class="shipping-checkpoints__step is-active">
+      <div class="shipping-checkpoints__dot"></div>
+      <div class="shipping-checkpoints__label">{{ 'products.product.shipping.prepared' | t | default: 'Prepared' }}</div>
+    </div>
+    <div class="shipping-checkpoints__step">
+      <div class="shipping-checkpoints__dot"></div>
+      <div class="shipping-checkpoints__label">{{ 'products.product.shipping.shipped' | t | default: 'Shipped' }}</div>
+    </div>
+    <div class="shipping-checkpoints__step">
+      <div class="shipping-checkpoints__dot"></div>
+      <div class="shipping-checkpoints__label">{{ 'products.product.shipping.delivered' | t | default: 'Delivered' }}</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .shipping-checkpoints {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(var(--color-base-text), 0.03);
+    border-radius: 8px;
+  }
+  .shipping-checkpoints__track {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding-top: 1rem;
+  }
+  .shipping-checkpoints__line {
+    position: absolute;
+    top: 1.5rem;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: rgba(var(--color-base-text), 0.1);
+    z-index: 1;
+  }
+  .shipping-checkpoints__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+  }
+  .shipping-checkpoints__dot {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: rgba(var(--color-base-text), 0.2);
+    border: 2px solid var(--color-background);
+  }
+  .shipping-checkpoints__step.is-active .shipping-checkpoints__dot {
+    background: rgb(var(--color-base-accent-1));
+    box-shadow: 0 0 0 4px rgba(var(--color-base-accent-1), 0.2);
+  }
+  .shipping-checkpoints__label {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    color: rgba(var(--color-base-text), 0.6);
+  }
+  .shipping-checkpoints__step.is-active .shipping-checkpoints__label {
+    color: rgb(var(--color-base-text));
+  }
+</style>

@@ -1,0 +1,253 @@
+<div class="image-with-text-overlay section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="overlay-hero banner--{{ section.settings.height }} {% if section.settings.image == blank %} placeholder{% endif %}">
+      {%- if section.settings.image != blank -%}
+        <div class="overlay-hero__media">
+          {{ section.settings.image | image_url: width: 3840 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840' }}
+        </div>
+      {%- else -%}
+        <div class="overlay-hero__media placeholder">
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+
+      <div class="overlay-hero__content overlay-hero__content--{{ section.settings.desktop_content_position }}">
+        <div class="overlay-hero__box text-{{ section.settings.desktop_content_alignment }}">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'heading' -%}
+                <h2 class="{{ block.settings.heading_size }}">{{ block.settings.heading | escape }}</h2>
+              {%- when 'text' -%}
+                <div class="rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+              {%- when 'button' -%}
+                <a {% if block.settings.button_link == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link }}" {% endif %} class="button">
+                  {{ block.settings.button_label | escape }}
+                </a>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+      
+      <div class="overlay-hero__mask" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .overlay-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner--small { height: 35rem; }
+  .banner--medium { height: 50rem; }
+  .banner--large { height: 70rem; }
+
+  .overlay-hero__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .overlay-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .overlay-hero__mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1;
+  }
+  .overlay-hero__content {
+    position: relative;
+    z-index: 2;
+    padding: 5rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+  .overlay-hero__content--middle-center { align-items: center; justify-content: center; }
+  .overlay-hero__content--bottom-left { align-items: flex-end; justify-content: flex-start; }
+  .overlay-hero__content--top-right { align-items: flex-start; justify-content: flex-end; }
+
+  .overlay-hero__box {
+    max-width: 60rem;
+    color: white;
+  }
+  .overlay-hero__box h2 {
+    font-weight: 800;
+    margin-bottom: 2rem;
+  }
+  .overlay-hero__box .rte {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Image with text overlay",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+       "type": "select",
+       "id": "height",
+       "options": [
+          { "value": "small", "label": "Small" },
+          { "value": "medium", "label": "Medium" },
+          { "value": "large", "label": "Large" }
+       ],
+       "default": "medium",
+       "label": "Height"
+    },
+    {
+       "type": "range",
+       "id": "overlay_opacity",
+       "min": 0,
+       "max": 90,
+       "step": 10,
+       "unit": "%",
+       "label": "Overlay opacity",
+       "default": 30
+    },
+    {
+       "type": "select",
+       "id": "desktop_content_position",
+       "options": [
+          { "value": "top-right", "label": "Top right" },
+          { "value": "middle-center", "label": "Middle center" },
+          { "value": "bottom-left", "label": "Bottom left" }
+       ],
+       "default": "middle-center",
+       "label": "Content position"
+    },
+    {
+       "type": "select",
+       "id": "desktop_content_alignment",
+       "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" }
+       ],
+       "default": "center",
+       "label": "Content alignment"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+       "type": "header",
+       "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Image with text overlay",
+          "label": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+             { "value": "h2", "label": "Small" },
+             { "value": "h1", "label": "Medium" },
+             { "value": "h0", "label": "Large" }
+          ],
+          "default": "h1",
+          "label": "Heading size"
+        }
+      ]
+    },
+    {
+       "type": "text",
+       "name": "Description",
+       "limit": 1,
+       "settings": [
+          {
+             "type": "richtext",
+             "id": "text",
+             "default": "<p>Introduce your brand with a powerful hero image.</p>",
+             "label": "Description"
+          }
+       ]
+    },
+    {
+       "type": "button",
+       "name": "Button",
+       "limit": 1,
+       "settings": [
+          {
+             "type": "text",
+             "id": "button_label",
+             "default": "Shop Now",
+             "label": "Button label"
+          },
+          {
+             "type": "url",
+             "id": "button_link",
+             "label": "Button link"
+          }
+       ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text overlay",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}
