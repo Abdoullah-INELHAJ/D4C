@@ -1,22 +1,24 @@
-{%- liquid
-  assign free_shipping_threshold = settings.free_shipping_threshold | times: 100
-  assign cart_total = cart.total_price
-  assign remaining = free_shipping_threshold | minus: cart_total
-  assign percentage = cart_total | times: 100 | divided_by: free_shipping_threshold
-  if percentage > 100
-    assign percentage = 100
-  endif
--%}
+{% raw %}Liquid syntax error (snippets/free-shipping-bar line 14): Expected dotdot but found pipe in "{{ 'sections.cart.free_shipping_away_html' | t: amount: (remaining | money) | default: 'You are [amount] away from free shipping!' | replace: '[amount]', (remaining | money) }}"{% endraw %}{% comment %}
 
-<div class="free-shipping-bar" data-threshold="{{ free_shipping_threshold }}">
-  <div class="free-shipping-bar__text">
-    {%- if cart_total < free_shipping_threshold -%}
-      <p>{{ 'sections.cart.free_shipping_away_html' | t: amount: (remaining | money) | default: 'You are [amount] away from free shipping!' | replace: '[amount]', (remaining | money) }}</p>
-    {%- else -%}
-      <p>{{ 'sections.cart.free_shipping_reached' | t | default: 'You have unlocked free shipping! 🎉' }}</p>
-    {%- endif -%}
-  </div>
-  <div class="free-shipping-bar__progress">
-    <div class="free-shipping-bar__line" style="width: {{ percentage }}%;"></div>
-  </div>
-</div>
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- liquid\n  assign free_shipping_threshold = settings.free_shipping_threshold
+    | times: 100\n  assign cart_total = cart.total_price\n  assign remaining = free_shipping_threshold
+    | minus: cart_total\n  assign percentage = cart_total | times: 100 | divided_by:
+    free_shipping_threshold\n  if percentage > 100\n    assign percentage = 100\n
+    \ endif\n-%}\n\n<div class=\"free-shipping-bar\" data-threshold=\"{{ free_shipping_threshold
+    }}\">\n  <div class=\"free-shipping-bar__text\">\n    {%- if cart_total < free_shipping_threshold
+    -%}\n      <p>{{ 'sections.cart.free_shipping_away_html' | t: amount: (remaining
+    | money) | default: 'You are [amount] away from free shipping!' | replace: '[amount]',
+    (remaining | money) }}</p>\n    {%- else -%}\n      <p>{{ 'sections.cart.free_shipping_reached'
+    | t | default: 'You have unlocked free shipping! \U0001F389' }}</p>\n    {%- endif
+    -%}\n  </div>\n  <div class=\"free-shipping-bar__progress\">\n    <div class=\"free-shipping-bar__line\"
+    style=\"width: {{ percentage }}%;\"></div>\n  </div>\n</div>\n"
+  to: '{% raw %}Liquid syntax error (snippets/free-shipping-bar line 14): Expected
+    dotdot but found pipe in "{{ ''sections.cart.free_shipping_away_html'' | t: amount:
+    (remaining | money) | default: ''You are [amount] away from free shipping!'' |
+    replace: ''[amount]'', (remaining | money) }}"{% endraw %}'
+  position: 0..291
+{% endcomment %}
